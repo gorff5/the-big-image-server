@@ -1,2 +1,2 @@
 # the-big-image-server
-beck end of simple communication app
+Backend of simple communication app - built using nodejs, express and mongodb
