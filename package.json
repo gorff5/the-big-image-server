@@ -1,0 +1,23 @@
+{
+  "name": "the-big-image-server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon --debug ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.13.4",
+    "jade": "~1.11.0",
+    "mongodb": "^2.2.10",
+    "mongoose": "^4.6.2",
+    "monk": "^3.1.2",
+    "morgan": "~1.7.0",
+    "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.10.2"
+  }
+}
