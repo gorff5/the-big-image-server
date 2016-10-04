@@ -9,6 +9,8 @@ var debug = require('debug')('the-big-image-server:server');
 var http = require('http');
 var db = require('../db');
 var io = require('socket.io')(http,  {origins:'localhost:* http://localhost:*'});
+var fs = require('fs');
+
 
 var URL = 'mongodb://server:server123@ds013916.mlab.com:13916/the_big_image';
 
@@ -48,7 +50,7 @@ io.on('connection', function(socket){
 
   socket.on('message', function(msg){
     console.log('message: ' + msg);
-    io.emit('chat message', msg);
+    io.emit('chat message', base64_encode('./public/images/sample-image.jpg'));
   });
 
 });
@@ -111,4 +113,12 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+}
+
+// function to encode file data to base64 encoded string
+function base64_encode(file) {
+  // read binary data
+  var bitmap = fs.readFileSync(file);
+  // convert binary data to base64 encoded string
+  return new Buffer(bitmap).toString('base64');
 }

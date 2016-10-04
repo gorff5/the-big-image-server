@@ -21,9 +21,20 @@
         socket.emit('message',$('#messageInput').val());
     }
 
-    socket.on('chat message', function(msg){
-        alert(msg);
+    socket.on('chat message', function(image){
+        displayImage(image);
     });
+
+    function displayImage(base64Image){
+        var image = convertToImage(base64Image);
+        document.body.appendChild(image);
+    }
+
+    function convertToImage(base64Image){
+        var image = new Image();
+        image.src = 'data:image/jpg;base64,'+base64Image;
+        return image;
+    }
 
 </script>
 
