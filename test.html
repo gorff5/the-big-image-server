@@ -1,0 +1,30 @@
+<html>
+
+<header>
+    <script src="node_modules/socket.io-client/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" crossorigin="anonymous"></script>
+</header>
+
+<body>
+<div>
+    <label for="messageInput">message:</label>
+    <input type="text" id="messageInput">
+    <button onclick="buttonClick();">send</button>
+</div>
+</body>
+
+
+<script>
+    var socket = io.connect('http://localhost:3000');
+
+    function buttonClick(){
+        socket.emit('message',$('#messageInput').val());
+    }
+
+    socket.on('chat message', function(msg){
+        alert(msg);
+    });
+
+</script>
+
+</html>
