@@ -10,6 +10,8 @@ var http = require('http');
 var db = require('../db');
 var io = require('socket.io')(http,  {origins:'localhost:* http://localhost:*'});
 var fs = require('fs');
+var imageService = require('../services/image.service');
+
 
 
 var URL = 'mongodb://server:server123@ds013916.mlab.com:13916/the_big_image';
@@ -51,6 +53,7 @@ io.on('connection', function(socket){
   socket.on('message', function(msg){
     console.log('message: ' + msg);
     io.emit('chat message', base64_encode('./public/images/sample-image.jpg'));
+    imageService.cropImage('./public/images/sample-image.jpg')
   });
 
 });
