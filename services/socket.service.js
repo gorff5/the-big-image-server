@@ -10,6 +10,15 @@ function connect(io) {
             console.log('user disconnected');
         });
 
+        socket.on('client_width', function(data){
+    process.stdout.write(data.letter);
+    console.log(data);
+  });
+  socket.on('client_highet', function(data){
+    process.stdout.write(data.letter);
+    console.log(data);
+  });
+        
         socket.on('share', function (msg) {
             console.log('message: ' + msg);
             io.emit('displayImage', base64_encode('./public/images/sample-image.jpg'));
