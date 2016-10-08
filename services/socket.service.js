@@ -11,11 +11,11 @@ function connect(io) {
         });
 
         socket.on('client_width', function(data){
-    process.stdout.write(data.letter);
+    // process.stdout.write(data.letter);
     console.log(data);
   });
   socket.on('client_highet', function(data){
-    process.stdout.write(data.letter);
+   // process.stdout.write(data.letter);
     console.log(data);
   });
         
