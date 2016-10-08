@@ -1,14 +1,14 @@
 <html>
 
 <header>
-    <script src="node_modules/socket.io-client/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.5.0/socket.io.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" crossorigin="anonymous"></script>
 </header>
 
 <body>
 <div>
-    <label for="messageInput">message:</label>
-    <input type="text" id="messageInput">
+    <!--<label for="messageInput">message:</label>-->
+    <!--<input type="text" id="messageInput">-->
     <button onclick="buttonClick();">send</button>
 </div>
 </body>
@@ -18,10 +18,10 @@
     var socket = io.connect('http://localhost:3000');
 
     function buttonClick(){
-        socket.emit('message',$('#messageInput').val());
+        socket.emit('share',$('#messageInput').val());
     }
 
-    socket.on('chat message', function(image){
+    socket.on('displayImage', function(image){
         displayImage(image);
     });
 
