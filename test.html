@@ -26,6 +26,7 @@
         socket.emit('client_width', {'width': screen.width});
         socket.emit('client_highet', {'highet': screen.height});
     }
+
     function buttonClick(){
         socket.emit('share',$('#messageInput').val());
 
