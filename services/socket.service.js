@@ -4,25 +4,33 @@ var imageService = require('./image.service');
 var socket={};
 
 function connect(io) {
+    var clients = [];
     io.on('connection', function (socket) {
+        clients.push(socket.id);
         console.log('a user connected');
-        socket.on('disconnect', function () {
+        socket.on('disconnect', function (socket) {
+            clients.splice(socket.id, 1);
             console.log('user disconnected');
         });
-
         socket.on('client_width', function(data){
-    // process.stdout.write(data.letter);
-    console.log(data);
-  });
-  socket.on('client_highet', function(data){
-   // process.stdout.write(data.letter);
-    console.log(data);
-  });
-        
+            // process.stdout.write(data.letter);
+            console.log(data);
+        });
+        socket.on('client_highet', function (data) {
+            // process.stdout.write(data.letter);
+            console.log(data);
+        });
         socket.on('share', function (msg) {
             console.log('message: ' + msg);
-            io.emit('displayImage', base64_encode('./public/images/sample-image.jpg'));
-            imageService.cropImage('./public/images/sample-image.jpg')
+            var pieces = io.engine.clientsCount;
+
+            imageService.cropImage('./public/images/sample-image.jpg', pieces).then(function (data) {
+
+                for (var i=0; i < pieces; i++) {
+                    io.sockets.connected[clients[i]].emit('displayImage', base64_encode(data[i]));
+                }
+
+            });
         });
 
     });
