@@ -5,7 +5,6 @@
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" crossorigin="anonymous"></script>
 </header>
 
-<body onload="sendResolution()">
 <div>
     <!--<label for="messageInput">message:</label>-->
     <!--<input type="text" id="messageInput">-->
@@ -15,21 +14,19 @@
 
 
 <script>
-    var socket = io.connect('http://localhost:3000');
+    var screenSize = {
+        width: screen.width,
+        height: screen.height
+    };
+    var sendObj = "screenSize="+JSON.stringify(screenSize);
+    var socket = io.connect('http://localhost:3000',{ query: sendObj });
 
     
     console.log("window width: " + screen.width);
     console.log("window highet: " + screen.height);
 
-    function sendResolution()
-    {
-        socket.emit('client_width', {'width': screen.width});
-        socket.emit('client_highet', {'highet': screen.height});
-    }
-
     function buttonClick(){
         socket.emit('share',$('#messageInput').val());
-
     }
 
     socket.on('displayImage', function(image){

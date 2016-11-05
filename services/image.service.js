@@ -1,6 +1,7 @@
 var jimp = require("jimp");
 q = require('q');
 //https://github.com/oliver-moran/jimp
+//https://github.com/jsmarkus/node-bin-packing
 var imageService = {};
 
 imageService.cropImage = function cropImage(imageSrc, pieces) {
