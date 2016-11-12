@@ -9,8 +9,9 @@ function connect(io) {
     var clients = [];
 
     io.on('connection', function (socket) {
-        clients.push({id: socket.id, screenSize: getScreenSize(socket)});
-        console.log('a user connected');
+        clients.push({id: socket.id,w:getWidth(socket),h:getHeight(socket)});
+
+        console.log('a user connected-'+getWidth(socket)+'-'+getHeight(socket));
 
         socket.on('disconnect', function (socket) {
             clients.splice(socket.id, 1);
@@ -19,14 +20,15 @@ function connect(io) {
 
         socket.on('share', function (msg) {
             console.log('message: ' + msg);
-            var pieces = io.engine.clientsCount;
+            var calcImageWithPieces = packingService.packing(JSON.parse(JSON.stringify(clients)));
 
-            packingService.packing();
+            imageService.cropImage('./public/images/sample-image.jpg', calcImageWithPieces).then(function (data) {
+                setTimeout(function(){
+                    for (var i=0; i < data.length; i++) {
+                        io.sockets.connected[clients[i].id].emit('displayImage', base64_encode(data[i]));
+                    }
+                },5000)
 
-            imageService.cropImage('./public/images/sample-image.jpg', pieces).then(function (data) {
-                for (var i=0; i < pieces; i++) {
-                    io.sockets.connected[clients[i]].emit('displayImage', base64_encode(data[i]));
-                }
             });
         });
 
@@ -50,6 +52,14 @@ function base64_encode(file) {
     return new Buffer(bitmap).toString('base64');
 }
 
+
+function  getWidth(socket){
+    return getScreenSize(socket).w;
+}
+
+function getHeight(socket){
+    return getScreenSize(socket).h;
+}
 
 function getScreenSize(socket) {
     return JSON.parse(socket.request._query['screenSize']);

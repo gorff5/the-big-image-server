@@ -3,6 +3,20 @@
 <header>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.5.0/socket.io.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" crossorigin="anonymous"></script>
+
+ <style>
+     button{
+         z-index: 2;
+     }
+     img{
+         position: absolute;
+         left:0;
+         top:0;
+         z-index: 1;
+     }
+ </style>
+
+
 </header>
 
 <div>
@@ -12,18 +26,13 @@
 </div>
 </body>
 
-
 <script>
     var screenSize = {
-        width: screen.width,
-        height: screen.height
+        w: window.innerWidth,
+        h: window.innerHeight
     };
     var sendObj = "screenSize="+JSON.stringify(screenSize);
     var socket = io.connect('http://localhost:3000',{ query: sendObj });
-
-    
-    console.log("window width: " + screen.width);
-    console.log("window highet: " + screen.height);
 
     function buttonClick(){
         socket.emit('share',$('#messageInput').val());

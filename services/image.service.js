@@ -7,37 +7,52 @@ var imageService = {};
 imageService.cropImage = function cropImage(imageSrc, pieces) {
     var deferred = q.defer();
 
+    var resizeImageSize = pieces.packer.root;
+    var blocks = pieces.blocks;
+
     jimp.read(imageSrc, function (err, image) {
         if (err) throw err;
 
         var croppedImages = [];
-        var width = image.bitmap.width;
-        var height = image.bitmap.height;
-        var slicedRange = width / pieces;
 
-        var x = 0;
-        var y = 0;
-        var w = slicedRange;
-        var h = parseInt(height);
+        image.resize(parseInt(resizeImageSize.w), parseInt(resizeImageSize.h)).write("newImage.jpg", cropToPieces(blocks));
 
-         crop(0, x);
+        function cropToPieces(blocks) {
+
+            jimp.read("newImage.jpg", function (err, image) {
+                if (err) {
+                    if(err.message == 'Unsupported MIME type: '){
+                        setTimeout(function(){
+                            cropToPieces(blocks);
+                        },200);
+                        return;
+                    }
+                    else{
+                        throw err;
+                    }
+                }
+                if (blocks.length == 0) return deferred.resolve(croppedImages);
+
+                var block = blocks.pop();
 
 
-        function crop(i, x) {
-            if (i >= pieces) return deferred.resolve(croppedImages) ;
+                while(!block.fit){
+                    setTimeout(function(){cropToPieces(blocks);},1000);
+                    return;
+                }
+                var x = block.fit.x;
+                var y = block.fit.y;
+                var w = block.w;
+                var h = block.h;
 
-            jimp.read(imageSrc, function (err, image) {
-                if (err) throw err;
+
+
+                croppedImages.unshift("image" + x + "-" + y + "-" + w + "-" + h + ".jpg");
 
                 image.crop(x, y, w, h)
-                    .write("image" + x + "-" + y + "-" + w + "-" + h + ".jpg", onFinish); // save
+                    .write("image" + x + "-" + y + "-" + w + "-" + h + ".jpg", cropToPieces(blocks)); // save
 
-                croppedImages.push("image" + x + "-" + y + "-" + w + "-" + h + ".jpg");
-            });
-
-            function onFinish() {
-                 crop(i + 1, x + slicedRange);
-            }
+            })
         }
     });
     return deferred.promise;
